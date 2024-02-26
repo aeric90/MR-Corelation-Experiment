@@ -31,6 +31,6 @@ public class ParticipantUIController : MonoBehaviour
 
     public void UIEnterPush()
     {
-        ExperimentController.instance.UIStart(idText);
+        ExperimentController.instance.PIDUINext(idText);
     }
 }

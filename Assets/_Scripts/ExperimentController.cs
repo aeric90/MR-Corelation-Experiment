@@ -4,11 +4,14 @@ using Unity.VisualScripting;
 using UnityEngine;
 using System.IO;
 using UnityEditor.XR;
+using OculusSampleFramework;
 
 public enum EXPERIMENT_STATE
 {
     START,
+    PARTICIPANT_ID,
     CALIBRATION,
+    PRACTICE,
     EXP_START,
     ROUND_START,
     ROUND,
@@ -22,16 +25,16 @@ public class ExperimentController : MonoBehaviour
 
     private int participantID = 0;
 
-    public List<GameObject> leftUIs = new List<GameObject>();
-    public List<GameObject> rightUIs = new List<GameObject>();
-
     private EXPERIMENT_STATE currentState;
+
+    private bool triggerDown = false;
 
     public int maxRounds = 10;
     private int currentRound = 1;
 
     private StreamWriter writer;
 
+    private int roomNumber = 0;
     public GameObject roomPrefab;
     private GameObject room;
 
@@ -52,6 +55,8 @@ public class ExperimentController : MonoBehaviour
 
     public List<int> roomList = new List<int>();
 
+    public GameObject fittsController;
+
     private void Awake()
     {
         if(instance == null) instance = this;
@@ -60,29 +65,21 @@ public class ExperimentController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //OVRManager.display.displayFrequency = 120.0f;
-        //OVRPlugin.systemDisplayFrequency = 120.0f;
+        OVRManager.display.displayFrequency = 120.0f;
+        OVRPlugin.systemDisplayFrequency = 120.0f;
 
         StartCoroutine(RoomAlignment());
 
-        changeState(EXPERIMENT_STATE.START);
+        changeState(EXPERIMENT_STATE.CALIBRATION);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (currentState != EXPERIMENT_STATE.EXP_END)
+        if (OVRInput.GetDown(OVRInput.Button.Three) && !buttonPress)
         {
-            if (OVRInput.GetDown(OVRInput.Button.Three) && !buttonPress)
-            {
-                buttonPress = true;
-                StartCoroutine(RoomAlignment());
-            }
-        }
-
-        if(currentState == EXPERIMENT_STATE.CALIBRATION)
-        {
-
+            buttonPress = true;
+            StartCoroutine(RoomAlignment());
         }
 
         if (OVRInput.GetUp(OVRInput.Button.Three) && buttonPress) buttonPress = false;
@@ -90,25 +87,41 @@ public class ExperimentController : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Alpha1))
         {
             RoomController.instance.confirgureRoom(roomList[0]);
-            FittsVRController.fittsVRinstance.ResetTargets();
+            FittsVRController.instance.ResetTargets();
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             RoomController.instance.confirgureRoom(roomList[1]);
-            FittsVRController.fittsVRinstance.ResetTargets();
+            FittsVRController.instance.ResetTargets();
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             RoomController.instance.confirgureRoom(roomList[2]);
-            FittsVRController.fittsVRinstance.ResetTargets();
+            FittsVRController.instance.ResetTargets();
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             RoomController.instance.confirgureRoom(roomList[3]);
-            FittsVRController.fittsVRinstance.ResetTargets();
+            FittsVRController.instance.ResetTargets();
+        }
+
+        switch (currentState)
+        {
+            case EXPERIMENT_STATE.CALIBRATION:
+                CalibrationCheck();
+                break;
+            case EXPERIMENT_STATE.PRACTICE:
+            case EXPERIMENT_STATE.ROUND:
+                CheckClick();
+                break;
+        }
+
+        if ((Input.GetKeyDown(KeyCode.Space) || OVRInput.GetUp(OVRInput.Button.PrimaryIndexTrigger) || OVRInput.GetUp(OVRInput.Button.SecondaryIndexTrigger)) && triggerDown)
+        {
+            triggerDown = false;
         }
     }
 
@@ -126,40 +139,42 @@ public class ExperimentController : MonoBehaviour
                 RoomController.instance.confirgureRoom(15);
                 currentState = EXPERIMENT_STATE.START;
                 break;
+            case EXPERIMENT_STATE.PARTICIPANT_ID:
+                UIController.instance.ToggleHandUI();
+                UIController.instance.ToggleParticipantUI();
+                currentState = EXPERIMENT_STATE.PARTICIPANT_ID;
+                break;
             case EXPERIMENT_STATE.CALIBRATION:
-                ToggleHandUI();
-                ToggleCalibrationUI();
+                UIController.instance.ToggleParticipantUI();
+                UIController.instance.ToggleCalibrationUI();
+                FittsVRController.instance.StartCalibration();
+                FittsVRController.instance.StartFitts();
                 currentState = EXPERIMENT_STATE.CALIBRATION;
                 break;
             case EXPERIMENT_STATE.EXP_START:
-                //openStudyFile();
+                UIController.instance.ToggleCalibrationUI();
                 
                 //StartCoroutine(changeExpRoom());
                 changeState(EXPERIMENT_STATE.ROUND_START);
                 break;
             case EXPERIMENT_STATE.ROUND_START:
                 RoomController.instance.confirgureRoom(15);
-                ToggleRoundUI();
-                StartUIController.instance.updateRoundText(currentRound);
+                UIController.instance.ToggleRoundUI();
+                StartUIController.instance.updateRoundText(roomNumber, currentRound);
                 currentState = EXPERIMENT_STATE.ROUND_START;
                 break;
             case EXPERIMENT_STATE.ROUND:
-                ToggleRoundUI();
+                UIController.instance.ToggleRoundUI();
                 currentState = EXPERIMENT_STATE.ROUND;
                 break;
             case EXPERIMENT_STATE.EXP_END:
                 closeStudyFile();
                 EloController.instance.writeEloFile();
                 RoomController.instance.confirgureRoom(15);
-                ToggleEndUI();
+                UIController.instance.ToggleEndUI();
                 currentState = EXPERIMENT_STATE.EXP_END;
                 break;
         }
-    }
-
-    public void setParticipantID(int participantID)
-    {
-        this.participantID = participantID; 
     }
 
     public int getParticipantID()
@@ -213,7 +228,17 @@ public class ExperimentController : MonoBehaviour
         writer.WriteLine(output);
     }
 
-    public void UIStart(string PID)
+    public void HandUINext(string hand)
+    {
+        if(hand != "")
+        {
+            this.hand = hand;
+
+            changeState(EXPERIMENT_STATE.PARTICIPANT_ID);
+        }
+    }
+
+    public void PIDUINext(string PID)
     {
         if (PID != "")
         {
@@ -223,9 +248,14 @@ public class ExperimentController : MonoBehaviour
             {
                 maxRounds = 3;
             }
-            ToggleParticipantUI();
-            changeState(EXPERIMENT_STATE.EXP_START);
+
+            changeState(EXPERIMENT_STATE.CALIBRATION);
         }
+    }
+
+    public void CalibrationNext()
+    {
+        changeState(EXPERIMENT_STATE.PRACTICE);
     }
 
     public void UIStartRound()
@@ -265,27 +295,22 @@ public class ExperimentController : MonoBehaviour
 
     public void SetTargetMeshHigh()
     {
-        FittsVRController.fittsVRinstance.ChangeTargetPrefab(targetMeshHigh);
+        FittsVRController.instance.ChangeTargetPrefab(targetMeshHigh);
     }
 
     public void SetTargetMeshLow()
     {
-        FittsVRController.fittsVRinstance.ChangeTargetPrefab(targetMeshLow);
+        FittsVRController.instance.ChangeTargetPrefab(targetMeshLow);
     }
 
     public void SetTargetMatHigh()
     {
-        FittsVRController.fittsVRinstance.ChangeTargetMaterials(targetMatsHigh[0], targetMatsHigh[1], targetMatsHigh[2], targetMatsHigh[3]);
+        FittsVRController.instance.ChangeTargetMaterials(targetMatsHigh[0], targetMatsHigh[1], targetMatsHigh[2], targetMatsHigh[3]);
     }
 
     public void SetTargetMatLow()
     {
-        FittsVRController.fittsVRinstance.ChangeTargetMaterials(targetMatsLow[0], targetMatsLow[1], targetMatsLow[2], targetMatsLow[3]);
-    }
-
-    public void SetHand(string hand)
-    {
-        this.hand = hand;
+        FittsVRController.instance.ChangeTargetMaterials(targetMatsLow[0], targetMatsLow[1], targetMatsLow[2], targetMatsLow[3]);
     }
 
     public void ConfirmHand()
@@ -293,33 +318,46 @@ public class ExperimentController : MonoBehaviour
         changeState(EXPERIMENT_STATE.CALIBRATION);
     }
 
-    private void ToggleHandUI()
+
+    private void CalibrationCheck()
     {
-        leftUIs[0].SetActive(!leftUIs[0].activeSelf);
-        rightUIs[0].SetActive(!rightUIs[0].activeSelf);
+        if ((Input.GetKeyDown(KeyCode.Space) || OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger) || OVRInput.GetDown(OVRInput.Button.SecondaryIndexTrigger)) && !triggerDown)
+        {
+            Vector3 pokePosition = fittsController.transform.position;
+
+            if (hand == "left")
+            {
+                pokePosition = leftPokeInteractor.transform.position;
+            }
+            else if (hand == "right")
+            {
+                pokePosition = rightPokeInteractor.transform.position;
+            }
+
+            Debug.Log(pokePosition);
+            fittsController.transform.position = new Vector3(fittsController.transform.position.x, pokePosition.y, pokePosition.z);
+            triggerDown = true;
+        }
     }
 
-    private void ToggleCalibrationUI()
+    private void CheckClick()
     {
-        if(hand == "L") leftUIs[1].SetActive(!leftUIs[0].activeSelf);
-        if(hand == "R") rightUIs[1].SetActive(!rightUIs[0].activeSelf);
+        if ((Input.GetKeyDown(KeyCode.Space) || OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger) || OVRInput.GetDown(OVRInput.Button.SecondaryIndexTrigger)) && !triggerDown)
+        {
+            if (hand == "left")
+            {
+                FittsVRController.instance.TargetSelected(leftPokeInteractor.transform.position);
+            }
+            else if (hand == "right")
+            {
+                FittsVRController.instance.TargetSelected(rightPokeInteractor.transform.position);
+            }
+            triggerDown = true;
+        }
     }
 
-    private void ToggleParticipantUI()
+    public void UICalibrationNext()
     {
-        if (hand == "L") leftUIs[2].SetActive(!leftUIs[0].activeSelf);
-        if (hand == "R") rightUIs[2].SetActive(!rightUIs[0].activeSelf);
-    }
-
-    private void ToggleRoundUI()
-    {
-        if (hand == "L") leftUIs[3].SetActive(!leftUIs[0].activeSelf);
-        if (hand == "R") rightUIs[3].SetActive(!rightUIs[0].activeSelf);
-    }
-
-    private void ToggleEndUI()
-    {
-        if (hand == "L") leftUIs[4].SetActive(!leftUIs[0].activeSelf);
-        if (hand == "R") rightUIs[4].SetActive(!rightUIs[0].activeSelf);
+        changeState(EXPERIMENT_STATE.PRACTICE);
     }
 }

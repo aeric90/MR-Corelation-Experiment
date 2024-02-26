@@ -7,6 +7,7 @@ using System;
 public enum FITTS_STATUS
 {
     INACTIVE,
+    CALIBRATION,
     PRACTICE,
     TRIAL,
     POST_TRAIL,
@@ -47,7 +48,7 @@ public class FittsSelection
 
 public class FittsVRController : MonoBehaviour
 {
-    public static FittsVRController fittsVRinstance;
+    public static FittsVRController instance;
     public bool testing = false;
     public FITTS_STATUS currentStatus = FITTS_STATUS.INACTIVE;
 
@@ -98,7 +99,7 @@ public class FittsVRController : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        fittsVRinstance = this;
+        instance = this;
     }
 
     // Update is called once per frame
@@ -118,7 +119,7 @@ public class FittsVRController : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            TargetSelected(new Vector3(1.0f, 1.0f, 1.0f));
+            //TargetSelected(new Vector3(1.0f, 1.0f, 1.0f));
         }
 
         if(Input.GetKeyDown(KeyCode.S))
@@ -130,6 +131,7 @@ public class FittsVRController : MonoBehaviour
         {
             TargetTriggerOut(targets[currentTargetIndex]);
         }
+
     }
 
     public void SetPID(int PID)
@@ -208,6 +210,12 @@ public class FittsVRController : MonoBehaviour
         }
 
         targets[currentTargetIndex].gameObject.GetComponent<Renderer>().material = targetActiveMaterial;
+    }
+
+    public void StartCalibration()
+    {
+        Debug.Log("Fitts VR - Start Calibration");
+        currentStatus = FITTS_STATUS.CALIBRATION;
     }
 
     public void StartPractice()
@@ -306,6 +314,12 @@ public class FittsVRController : MonoBehaviour
 
         switch (currentStatus)
         {
+            case FITTS_STATUS.CALIBRATION:
+                currentTotalTargets = 5;
+                currentAmplitude = 0.7f;
+                currentTargetWidth = 0.06f;
+                ResetTargets();
+                break;
             case FITTS_STATUS.PRACTICE:
                 Debug.Log("Fitts VR - Next Practice");
                 currentTrial++;
