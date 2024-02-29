@@ -13,16 +13,14 @@ public class HandUIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (ExperimentController.instance.hand == "L")
+        if (hand == "left")
         {
-            hand = "left";
             leftButton.GetComponent<Image>().color = Color.yellow;
             rightButton.GetComponent<Image>().color = Color.white;
         }
 
-        if(ExperimentController.instance.hand == "R")
+        if(hand == "right")
         {
-            hand = "right";
             leftButton.GetComponent<Image>().color = Color.white;
             rightButton.GetComponent<Image>().color = Color.yellow;
         }
@@ -31,5 +29,10 @@ public class HandUIController : MonoBehaviour
     public void nextClick()
     {
         ExperimentController.instance.HandUINext(hand);
+    }
+
+    public void handButton(string hand)
+    {
+        this.hand = hand;
     }
 }

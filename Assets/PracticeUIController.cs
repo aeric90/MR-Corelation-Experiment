@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PracticeUIController : MonoBehaviour
 {
+    public GameObject nextButton;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -13,6 +15,6 @@ public class PracticeUIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (FittsVRController.instance.GetPracticeComplete()) nextButton.SetActive(true);    
     }
 }

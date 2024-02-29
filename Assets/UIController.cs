@@ -18,33 +18,64 @@ public class UIController : MonoBehaviour
     public GameObject endUI;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         instance = this;
     }
 
-    public void ToggleHandUI()
+    public void handUIOn()
     {
+        disableAll();
         handUI.SetActive(!handUI.activeSelf);
     }
 
-    public void ToggleCalibrationUI()
+    public void calibrationUIOn()
     {
-        calibartionUI.SetActive(!calibartionUI.activeSelf);
+        disableAll();
+        calibartionUI.SetActive(true);
     }
 
-    public void ToggleParticipantUI()
+    public void participantUIOn()
     {
-        participantUI.SetActive(!participantUI.activeSelf);
+        disableAll();
+        participantUI.SetActive(true);
     }
 
-    public void ToggleRoundUI()
+    public void roundUIOn()
     {
-        roundStartUI.SetActive(!roundStartUI.activeSelf);
+        disableAll();
+        roundStartUI.SetActive(true);
     }
 
-    public void ToggleEndUI()
+    public void endUIOn()
     {
-        endUI.SetActive(!endUI.activeSelf);
+        disableAll();
+        endUI.SetActive(true);
+    }
+
+    public void practice1UIOn()
+    {
+        disableAll();
+        practiceUI1.SetActive(true);
+    }
+
+    public void practice2UIOn()
+    {
+        disableAll();
+        practiceUI2.SetActive(true);
+    }
+
+    public void disableAll()
+    {
+        handUI.SetActive(false);
+        participantUI.SetActive(false);
+        calibartionUI.SetActive(false);
+        practiceUI1.SetActive(false);
+        practiceUI2.SetActive(false);
+        roundStartUI.SetActive(false);
+        WSSurveyUI.SetActive(false);
+        SUSSurveyUI.SetActive(false);
+        IPQSurveyUI.SetActive(false);
+        endUI.SetActive(false);
     }
 }

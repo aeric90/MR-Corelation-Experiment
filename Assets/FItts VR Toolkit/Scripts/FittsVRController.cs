@@ -96,6 +96,8 @@ public class FittsVRController : MonoBehaviour
     private List<float> tList = new List<float>();
     private List<float> dXlist = new List<float>();
 
+    private bool touch = false;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -105,32 +107,7 @@ public class FittsVRController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            SetPID(0);
-            StartTrials();
-            StartFitts();
-        }
 
-        if(Input.GetKeyDown(KeyCode.N))
-        {
-            NextTrial();
-        }
-
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            //TargetSelected(new Vector3(1.0f, 1.0f, 1.0f));
-        }
-
-        if(Input.GetKeyDown(KeyCode.S))
-        {
-            TargetTriggerIn(targets[currentTargetIndex]);
-        }
-
-        if (Input.GetKeyUp(KeyCode.S))
-        {
-            TargetTriggerOut(targets[currentTargetIndex]);
-        }
 
     }
 
@@ -263,17 +240,20 @@ public class FittsVRController : MonoBehaviour
 
     public void TargetTriggerIn(GameObject target)
     {
-        if(selectionTrial == true)
+        if (targets[currentTargetIndex] == target)
         {
-            if(targets[currentTargetIndex] = target) target.GetComponent<Renderer>().material = targetSelectedMaterial;
+            touch = true;
+            if (selectionTrial == true) target.GetComponent<Renderer>().material = targetSelectedMaterial;
+
         }
     }
 
     public void TargetTriggerOut(GameObject target)
     {
-        if (selectionTrial == true)
+        if (targets[currentTargetIndex] == target)
         {
-            if (targets[currentTargetIndex] = target) target.GetComponent<Renderer>().material = targetActiveMaterial;
+            touch = false;
+            if (selectionTrial == true) target.GetComponent<Renderer>().material = targetActiveMaterial;
         }
     }
 
@@ -281,29 +261,33 @@ public class FittsVRController : MonoBehaviour
     {
         if (fittsRunning)
         {
-            GetComponent<AudioSource>().Play();
-
-            switch(currentStatus)
+            if (selectionTrial == false || (selectionTrial == true && touch == true))
             {
-                case FITTS_STATUS.TRIAL:
-                    if (targetCount > 0)
-                    {
-                        AddSelection(selectionVector);
-                        if(!testing) DetailOutput(selectionVector);
-                    }
-                    break;
-            }
+                GetComponent<AudioSource>().Play();
 
-            lastTargetTime = Time.time;
-            targetCount++;
+                switch (currentStatus)
+                {
+                    case FITTS_STATUS.TRIAL:
+                        if (targetCount > 0)
+                        {
+                            AddSelection(selectionVector);
+                            if (!testing) DetailOutput(selectionVector);
+                        }
+                        break;
+                }
 
-            if (targetCount > currentTotalTargets)
-            {
-                NextTrial();
-            }
-            else
-            {
-                SetNextActiveTarget();
+                lastTargetTime = Time.time;
+                touch = false;
+                targetCount++;
+
+                if (targetCount > currentTotalTargets)
+                {
+                    NextTrial();
+                }
+                else
+                {
+                    SetNextActiveTarget();
+                }
             }
         }
     }
@@ -535,5 +519,10 @@ public class FittsVRController : MonoBehaviour
         targetActiveMaterial = activeMat;
         targetInactiveMaterial = inactiveMat;
         targetSelectedMaterial = selectedMat;
+    }
+
+    public void setSelectionCondition(bool status)
+    {
+        selectionTrial = status;
     }
 }
