@@ -61,6 +61,14 @@ public class FittsVRController : MonoBehaviour
 
     private List<int> conditionSquareNew = new List<int>();
 
+    public GameObject targetPrefabHigh;
+    public GameObject targetPrefabLow;
+    public GameObject targetPrefabSimple;
+
+    public List<Material> targetMatsHigh = new List<Material>();
+    public List<Material> targetMatsLow = new List<Material>();
+    public List<Material> targetMatsSimple = new List<Material>();
+
     public GameObject targetPrefab;
     public Material targetBasicMaterial;
     public Material targetActiveMaterial;
@@ -147,7 +155,8 @@ public class FittsVRController : MonoBehaviour
         {
             float x = targetContainer.transform.position.x + (currentAmplitude / 2.0f) * Mathf.Cos((Mathf.PI * 2) * (i / currentTotalTargets));
             float y = targetContainer.transform.position.y + (currentAmplitude / 2.0f) * Mathf.Sin((Mathf.PI * 2) * (i / currentTotalTargets));
-            GameObject newTarget = Instantiate(targetPrefab, new Vector3(x, y, targetContainer.transform.position.z), targetPrefab.transform.rotation, targetContainer.transform);
+            GameObject newTarget = Instantiate(targetPrefab, targetContainer.transform);
+            newTarget.transform.position = new Vector3(x, y, targetContainer.transform.position.z);
             newTarget.GetComponent<MeshRenderer>().material = targetBasicMaterial;
             newTarget.transform.localScale = new Vector3(currentTargetWidth, currentTargetWidth, currentTargetWidth); 
             targets.Add(newTarget);
@@ -524,5 +533,40 @@ public class FittsVRController : MonoBehaviour
     public void setSelectionCondition(bool status)
     {
         selectionTrial = status;
+    }
+
+    public void setTargetContainer(GameObject targetContainer)
+    {
+        this.targetContainer = targetContainer;
+    }
+
+    public void SetTargetMeshHigh()
+    {
+        ChangeTargetPrefab(targetPrefabHigh);
+    }
+
+    public void SetTargetMeshLow()
+    {
+        ChangeTargetPrefab(targetPrefabLow);
+    }
+
+    public void SetTargetMeshSimple()
+    {
+        ChangeTargetPrefab(targetPrefabSimple);
+    }
+
+    public void SetTargetMatHigh()
+    {
+        ChangeTargetMaterials(targetMatsHigh[0], targetMatsHigh[1], targetMatsHigh[2], targetMatsHigh[3]);
+    }
+
+    public void SetTargetMatLow()
+    {
+        ChangeTargetMaterials(targetMatsLow[0], targetMatsLow[1], targetMatsLow[2], targetMatsLow[3]);
+    }
+
+    public void SetTargetMatSimple()
+    {
+        ChangeTargetMaterials(targetMatsSimple[0], targetMatsSimple[1], targetMatsSimple[2], targetMatsSimple[3]);
     }
 }

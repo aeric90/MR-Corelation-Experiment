@@ -17,4 +17,9 @@ public class PracticeUIController : MonoBehaviour
     {
         if (FittsVRController.instance.GetPracticeComplete()) nextButton.SetActive(true);    
     }
+
+    public void nextClick()
+    {
+        ExperimentController.instance.PracticeUINext();
+    }
 }

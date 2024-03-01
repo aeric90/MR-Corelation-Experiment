@@ -7,8 +7,6 @@ public class RoomController : MonoBehaviour
 {
     public static RoomController instance;
 
-    public GameObject demo;
-    public GameObject furnitue;
 
     public List<Light> lights = new List<Light>();
 
@@ -34,18 +32,18 @@ public class RoomController : MonoBehaviour
         detailControl(roomMask[0] == '1');
         textureControl(roomMask[1] == '1');
         shadowControl(roomMask[2] == '1');
-        plausibilityControl(roomMask[3] == '1');
+        //plausibilityControl(roomMask[3] == '1');
     }
 
     private void detailControl(bool status)
     {
         if (status)
         {
-            ExperimentController.instance.SetTargetMeshHigh();
+            FittsVRController.instance.SetTargetMeshHigh();
         } 
         else
         {
-            ExperimentController.instance.SetTargetMeshLow();
+            FittsVRController.instance.SetTargetMeshLow();
         }
 
         foreach(GameObject piece in GameObject.FindGameObjectsWithTag("furniture"))
@@ -65,11 +63,11 @@ public class RoomController : MonoBehaviour
     {
         if (status)
         {
-            ExperimentController.instance.SetTargetMatHigh();
+            FittsVRController.instance.SetTargetMatHigh();
         }
         else
         {
-            ExperimentController.instance.SetTargetMatLow();
+            FittsVRController.instance.SetTargetMatLow();
         }
 
         foreach (GameObject piece in GameObject.FindGameObjectsWithTag("furniture"))
@@ -112,17 +110,5 @@ public class RoomController : MonoBehaviour
                 piece.GetComponent<FurnitureController>().setImplausible();
             }
         }
-    }
-
-    public void setForDemo()
-    {
-        demo.SetActive(true);
-        furnitue.SetActive(false);
-    }
-
-    public void setForExperiment()
-    {
-        demo.SetActive(false);
-        furnitue.SetActive(true);
     }
 }

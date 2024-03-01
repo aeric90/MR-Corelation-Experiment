@@ -27,14 +27,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6993205541863642879}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.5, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 6993205542563745829}
+  m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6993205541863642876
 MonoBehaviour:
@@ -48,36 +47,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86e1654a0d714fc4e9fc1ecc0e7a0944, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  testing: 0
   currentStatus: 0
   participantID: 0
   practiceTrials:
     numOfTargets: 5
     conditions:
     - amplitude: 0.5
-      width: 0.1
-    - amplitude: 0.7
       width: 0.06
+    - amplitude: 0.7
+      width: 0.12
   experimentTrials:
     numOfTargets: 11
     conditions:
     - amplitude: 0.5
-      width: 0.1
+      width: 0.06
     - amplitude: 0.5
+      width: 0.09
+    - amplitude: 0.5
+      width: 0.12
+    - amplitude: 0.6
       width: 0.06
     - amplitude: 0.6
-      width: 0.1
+      width: 0.09
     - amplitude: 0.6
-      width: 0.06
-    - amplitude: 0.7
-      width: 0.1
+      width: 0.12
     - amplitude: 0.7
       width: 0.06
+    - amplitude: 0.7
+      width: 0.09
+    - amplitude: 0.7
+      width: 0.12
+  selectionTrial: 1
   conditionRepetitions: 2
-  targetPrefab: {fileID: 6654884858570916789, guid: 4b5fd89c69ce1804597d09224abb89da, type: 3}
-  targetBasicMaterial: {fileID: 2100000, guid: d34018b4c65296d43ae5da85cb2b618c, type: 2}
-  targetActiveMaterial: {fileID: 2100000, guid: e347aec873d95ab4f86a8a60eeeb9617, type: 2}
-  targetInactiveMaterial: {fileID: 2100000, guid: ab737f9134bf19c44b5b57bbfd105d57, type: 2}
-  targetContainer: {fileID: 6993205542563745828}
+  targetPrefab: {fileID: 5734808579551424662, guid: 0aedd4fc46c8174408ca0d9e1ba93f8f, type: 3}
+  targetBasicMaterial: {fileID: 2100000, guid: 2985c0561b8fd414a9fd9e104a5f8963, type: 2}
+  targetActiveMaterial: {fileID: 2100000, guid: d69d38ce93b351a4396e07b30c5df4ce, type: 2}
+  targetInactiveMaterial: {fileID: 2100000, guid: f690c8c9d18baa44bb2c000142cd294b, type: 2}
+  targetSelectedMaterial: {fileID: 2100000, guid: 3f42fbb2614d37e46aa0fe4a659deec1, type: 2}
+  targetContainer: {fileID: 0}
   fittsRunning: 0
   targetCount: 0
 --- !u!82 &1410036740
@@ -201,34 +209,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34b6f7e9a24b4a849ac42415cd8e6eab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &6993205542563745828
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6993205542563745829}
-  m_Layer: 0
-  m_Name: Target Container
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6993205542563745829
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6993205542563745828}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6993205541863642877}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

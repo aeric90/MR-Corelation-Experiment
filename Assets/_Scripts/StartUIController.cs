@@ -25,4 +25,9 @@ public class StartUIController : MonoBehaviour
     {
         this.conditionText.text = conditionText;
     }
+
+    public void nextClick()
+    {
+        ExperimentController.instance.UIStartRound();
+    }
 }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6654884858570916791}
   - component: {fileID: 6654884858570916790}
   m_Layer: 0
-  m_Name: Target Prefab Test
+  m_Name: Fitts Target Simple
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -8,6 +8,10 @@ TagManager:
   - shadow wall
   - furniture
   - poke
+  - Bullet
+  - fittsSpawn
+  - room
+  - uiAnchor
   layers:
   - Default
   - TransparentFX
