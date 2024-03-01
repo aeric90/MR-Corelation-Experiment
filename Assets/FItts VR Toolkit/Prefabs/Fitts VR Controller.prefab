@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6810814897076110083
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7923278711761762467}
+  m_Layer: 0
+  m_Name: Fitts Target Container
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7923278711761762467
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6810814897076110083}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6993205541863642877}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6993205541863642879
 GameObject:
   m_ObjectHideFlags: 0
@@ -32,7 +63,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7923278711761762467}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6993205541863642876
@@ -79,13 +111,31 @@ MonoBehaviour:
     - amplitude: 0.7
       width: 0.12
   selectionTrial: 1
-  conditionRepetitions: 2
+  conditionRepetitions: 1
+  targetPrefabHigh: {fileID: 5734808579551424662, guid: 0aedd4fc46c8174408ca0d9e1ba93f8f, type: 3}
+  targetPrefabLow: {fileID: 5734808579551424662, guid: a037ab287badd8140b265c85d67f2dde, type: 3}
+  targetPrefabSimple: {fileID: 6654884858570916789, guid: 4b5fd89c69ce1804597d09224abb89da, type: 3}
+  targetMatsHigh:
+  - {fileID: 2100000, guid: 2985c0561b8fd414a9fd9e104a5f8963, type: 2}
+  - {fileID: 2100000, guid: d69d38ce93b351a4396e07b30c5df4ce, type: 2}
+  - {fileID: 2100000, guid: f690c8c9d18baa44bb2c000142cd294b, type: 2}
+  - {fileID: 2100000, guid: 3f42fbb2614d37e46aa0fe4a659deec1, type: 2}
+  targetMatsLow:
+  - {fileID: 2100000, guid: a287be149f9528b4084e1817c0966055, type: 2}
+  - {fileID: 2100000, guid: 2aa6fd4eb7f4da14c9d8dedbc1e0bd92, type: 2}
+  - {fileID: 2100000, guid: 7d8b736d8cd65a84a936710864f6f963, type: 2}
+  - {fileID: 2100000, guid: 67acf5bf0415f4a40bbe2b8f2b12f00d, type: 2}
+  targetMatsSimple:
+  - {fileID: 2100000, guid: d34018b4c65296d43ae5da85cb2b618c, type: 2}
+  - {fileID: 2100000, guid: e347aec873d95ab4f86a8a60eeeb9617, type: 2}
+  - {fileID: 2100000, guid: ab737f9134bf19c44b5b57bbfd105d57, type: 2}
+  - {fileID: 2100000, guid: 488d26a770cd29d409c6648c5472b5a9, type: 2}
   targetPrefab: {fileID: 5734808579551424662, guid: 0aedd4fc46c8174408ca0d9e1ba93f8f, type: 3}
   targetBasicMaterial: {fileID: 2100000, guid: 2985c0561b8fd414a9fd9e104a5f8963, type: 2}
   targetActiveMaterial: {fileID: 2100000, guid: d69d38ce93b351a4396e07b30c5df4ce, type: 2}
   targetInactiveMaterial: {fileID: 2100000, guid: f690c8c9d18baa44bb2c000142cd294b, type: 2}
   targetSelectedMaterial: {fileID: 2100000, guid: 3f42fbb2614d37e46aa0fe4a659deec1, type: 2}
-  targetContainer: {fileID: 0}
+  targetContainer: {fileID: 6810814897076110083}
   fittsRunning: 0
   targetCount: 0
 --- !u!82 &1410036740

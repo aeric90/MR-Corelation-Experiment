@@ -48,6 +48,7 @@ public class ExperimentController : MonoBehaviour
     public GameObject rightPokeInteractor;
 
     public GameObject fittsSpawn;
+    public GameObject fittsController;
     private Vector3 calibrationPoint = Vector3.zero;
 
     public GameObject uiAnchor;
@@ -258,8 +259,8 @@ public class ExperimentController : MonoBehaviour
         {
             pokePosition = rightPokeInteractor.transform.position;
         }
-        calibrationPoint = new Vector3(fittsSpawn.transform.position.x, pokePosition.y, pokePosition.z);
-        fittsSpawn.transform.position = calibrationPoint;
+        calibrationPoint = new Vector3(fittsController.transform.position.x, pokePosition.y, pokePosition.z);
+        fittsController.transform.position = calibrationPoint;
     }
 
     private void CheckClick()
@@ -293,7 +294,9 @@ public class ExperimentController : MonoBehaviour
     {
         fittsSpawn = GameObject.FindGameObjectWithTag("fittsSpawn");
         if (calibrationPoint != Vector3.zero) fittsSpawn.transform.position = calibrationPoint;
-        FittsVRController.instance.setTargetContainer(fittsSpawn);
+        fittsController.transform.position = fittsSpawn.transform.position;
+        fittsController.transform.rotation = fittsSpawn.transform.rotation;
+        
     }
 
     public void SetUIAnchorPoint()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System;
+using Unity.VisualScripting;
 
 public enum FITTS_STATUS
 {
@@ -153,10 +154,13 @@ public class FittsVRController : MonoBehaviour
 
         for(float i = 0.0f; i < currentTotalTargets; i++)
         {
-            float x = targetContainer.transform.position.x + (currentAmplitude / 2.0f) * Mathf.Cos((Mathf.PI * 2) * (i / currentTotalTargets));
-            float y = targetContainer.transform.position.y + (currentAmplitude / 2.0f) * Mathf.Sin((Mathf.PI * 2) * (i / currentTotalTargets));
-            GameObject newTarget = Instantiate(targetPrefab, targetContainer.transform);
-            newTarget.transform.position = new Vector3(x, y, targetContainer.transform.position.z);
+            //float x = targetContainer.transform.position.x + (currentAmplitude / 2.0f) * Mathf.Cos((Mathf.PI * 2) * (i / currentTotalTargets));
+            //float y = targetContainer.transform.position.y + (currentAmplitude / 2.0f) * Mathf.Sin((Mathf.PI * 2) * (i / currentTotalTargets));
+            float x = (currentAmplitude / 2.0f) * Mathf.Cos((Mathf.PI * 2) * (i / currentTotalTargets));
+            float y = (currentAmplitude / 2.0f) * Mathf.Sin((Mathf.PI * 2) * (i / currentTotalTargets));
+            //GameObject newTarget = Instantiate(targetPrefab, new Vector3(x, y, targetContainer.transform.localPosition.z), targetPrefab.transform.rotation, targetContainer.transform);
+            GameObject newTarget = Instantiate(targetPrefab, targetContainer.transform, false);
+            newTarget.transform.localPosition = new Vector3(newTarget.transform.localPosition.x + x, newTarget.transform.localPosition.y + y, newTarget.transform.localPosition.z);
             newTarget.GetComponent<MeshRenderer>().material = targetBasicMaterial;
             newTarget.transform.localScale = new Vector3(currentTargetWidth, currentTargetWidth, currentTargetWidth); 
             targets.Add(newTarget);

@@ -14,6 +14,7 @@ public class MRRoomController : MonoBehaviour
         instance = this;
     }
 
+
     public void AlignRoom()
     {
         StartCoroutine(RoomAlignment());
