@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7597833672617250310}
   - component: {fileID: -7701332131438724963}
   - component: {fileID: -6936201254281122858}
+  - component: {fileID: -5644224057319233554}
   m_Layer: 0
   m_Name: Fitts Target Button Low
   m_TagString: Untagged
@@ -134,3 +135,15 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -5076798556035486163, guid: 14f9d5a110b5df54685d8e7b7812830b, type: 3}
+--- !u!114 &-5644224057319233554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5734808579551424662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92434239188e03c48b339f778d481521, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

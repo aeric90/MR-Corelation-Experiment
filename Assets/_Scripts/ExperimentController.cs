@@ -18,6 +18,7 @@ public enum EXPERIMENT_STATE
     ROUND_START,
     ROUND,
     ROUND_END,
+    SURVEY,
     EXP_END
 }
 
@@ -33,8 +34,9 @@ public class ExperimentController : MonoBehaviour
 
     public int maxRounds = 10;
     private int currentRound = 1;
-
     private int roomNumber = 0;
+    private int currentCondition = 0;
+    private int currentSurvey = 0;
 
     public string hand = "";
 
@@ -49,12 +51,15 @@ public class ExperimentController : MonoBehaviour
 
     public GameObject fittsSpawn;
     public GameObject fittsController;
-    private Vector3 calibrationPoint = Vector3.zero;
 
     public GameObject uiAnchor;
     public GameObject uiController;
 
     public List<int> roomList = new List<int>();
+
+    public List<int> roomSquare = new List<int>();
+    public List<int> conditionSquare = new List<int>();
+    public List<int> surveySquare = new List<int>();
 
     private PhotonView photonView;
 
@@ -80,7 +85,10 @@ public class ExperimentController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if(currentState == EXPERIMENT_STATE.ROUND)
+        {
+            if (FittsVRController.instance.GetTrialComplete()) changeState(EXPERIMENT_STATE.SURVEY);
+        }
     }
 
     public void TopButtonPress()
@@ -154,18 +162,36 @@ public class ExperimentController : MonoBehaviour
             case EXPERIMENT_STATE.EXP_START:
                 UIController.instance.disableAll();
                 FittsVRController.instance.EndTrial();
+                FittsVRController.instance.SetPID(participantID);
+                FittsVRController.instance.StartTrials();
+                roomSquare = LatinSquareGenerator(4, participantID);
+                conditionSquare = LatinSquareGenerator(2, participantID);
+                surveySquare = LatinSquareGenerator(3, participantID);
                 changeState(EXPERIMENT_STATE.ROUND_START);
                 break;
             case EXPERIMENT_STATE.ROUND_START:
-                RoomController.instance.confirgureRoom(15);
+                RoomController.instance.confirgureRoom(roomList[roomSquare[roomNumber]]);
+                FittsVRController.instance.setSelectionCondition(conditionSquare[currentCondition] == 1);
+                FittsVRController.instance.SetConditionID(roomList[roomSquare[roomNumber]]);
                 UIController.instance.roundUIOn();
                 StartUIController.instance.updateRoundText(roomNumber, currentRound);
+                StartUIController.instance.updateConditionText(conditionSquare[currentCondition]);
                 currentState = EXPERIMENT_STATE.ROUND_START;
                 break;
             case EXPERIMENT_STATE.ROUND:
                 UIController.instance.disableAll();
-                // start new fitts round based on criteria
+                FittsVRController.instance.StartFitts();
                 currentState = EXPERIMENT_STATE.ROUND;
+                break;
+            case EXPERIMENT_STATE.ROUND_END:
+                FittsVRController.instance.EndTrial();
+                nextRound();
+                currentState = EXPERIMENT_STATE.ROUND_END;
+                break;
+            case EXPERIMENT_STATE.SURVEY:
+                currentState = EXPERIMENT_STATE.SURVEY;
+                currentSurvey = 0;
+                toggleSurvey();
                 break;
             case EXPERIMENT_STATE.EXP_END:
                 RoomController.instance.confirgureRoom(15);
@@ -180,18 +206,26 @@ public class ExperimentController : MonoBehaviour
         return participantID;
     }
 
+    public int getRoomID()
+    {
+        return roomList[roomSquare[roomNumber]];
+    }
+
     public void nextRound()
     {
         currentRound++;
+        currentCondition++;
 
-        if (currentRound <= maxRounds)
+        if (currentCondition > 1)
         {
-            changeState(EXPERIMENT_STATE.ROUND_START);
+            currentCondition = 0;
+            roomNumber++;
         }
-        else
-        {
+
+        if (roomNumber > 3)
             changeState(EXPERIMENT_STATE.EXP_END);
-        }
+        else
+            changeState(EXPERIMENT_STATE.ROUND_START);
     }
 
     public void HandUINext(string hand)
@@ -259,8 +293,12 @@ public class ExperimentController : MonoBehaviour
         {
             pokePosition = rightPokeInteractor.transform.position;
         }
-        calibrationPoint = new Vector3(fittsController.transform.position.x, pokePosition.y, pokePosition.z);
-        fittsController.transform.position = calibrationPoint;
+
+        fittsSpawn = GameObject.FindGameObjectWithTag("fittsSpawn");
+        //fittsSpawn.transform.localPosition = new Vector3(0.0f, pokePosition.y, pokePosition.z);
+        Vector3 projection = Vector3.Project(pokePosition, fittsSpawn.transform.position);
+        fittsSpawn.transform.position = new Vector3(projection.x, pokePosition.y, projection.z);
+        SetFittsSpawnPoint();
     }
 
     private void CheckClick()
@@ -293,7 +331,6 @@ public class ExperimentController : MonoBehaviour
     public void SetFittsSpawnPoint()
     {
         fittsSpawn = GameObject.FindGameObjectWithTag("fittsSpawn");
-        if (calibrationPoint != Vector3.zero) fittsSpawn.transform.position = calibrationPoint;
         fittsController.transform.position = fittsSpawn.transform.position;
         fittsController.transform.rotation = fittsSpawn.transform.rotation;
         
@@ -304,6 +341,34 @@ public class ExperimentController : MonoBehaviour
         uiAnchor = GameObject.FindGameObjectWithTag("uiAnchor");
         uiController.transform.position = uiAnchor.transform.position;
         uiController.transform.rotation = uiAnchor.transform.rotation;
+    }
+
+    public void nextSurvey()
+    {
+        currentSurvey++;
+        if (currentSurvey > 2)
+        {
+            nextRound();
+        } else
+        {
+            toggleSurvey();
+        }
+    }
+
+    private void toggleSurvey()
+    {
+        switch (surveySquare[currentSurvey])
+        {
+            case 0:
+                UIController.instance.wsSurveyUIOn();
+                break;
+            case 1:
+                UIController.instance.susSurveyUIOn();
+                break;
+            case 2:
+                UIController.instance.ipqSurveyUIOn();
+                break;
+        }
     }
 
     private List<int> LatinSquareGenerator(int conditions, int participantID)

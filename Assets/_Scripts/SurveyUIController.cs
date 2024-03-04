@@ -74,6 +74,7 @@ public class SurveyQuestion
 
 public class SurveyUIController : MonoBehaviour
 {
+    public string surveyFile;
     public TMPro.TextMeshProUGUI surveyTitle;
     public GameObject questionContainer;
     public GameObject questionPrefab;
@@ -84,8 +85,11 @@ public class SurveyUIController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        ImportSurvey("D:\\MR Corelation Experiment\\ws.xml");
-        SetupSurvey();
+        if (surveyFile != null)
+        {
+            ImportSurvey(Application.persistentDataPath + "/" + surveyFile);
+            if(surveyContainer.SurveyQuestions.Count > 0) SetupSurvey();
+        }
     }
 
     // Update is called once per frame
@@ -119,8 +123,6 @@ public class SurveyUIController : MonoBehaviour
 
     public void ResetSurvey()
     {
-        Debug.Log("Reseting " + questionContainer.transform.childCount + " Questions");
-
         foreach(Transform questionPanel in questionContainer.transform)
         {
             Debug.Log(questionPanel.gameObject.name);
@@ -134,5 +136,16 @@ public class SurveyUIController : MonoBehaviour
         TextWriter textWriter = new StreamWriter(file_name);
         serializer.Serialize(textWriter, surveyContainer);
         textWriter.Close();
+    }
+
+    public void CompleteSurvey()
+    {
+        // Check that all the questions are completed.
+        // If not, update the error message    
+        //Else
+        ExportSurvey(Application.persistentDataPath + "/" + ExperimentController.instance.getParticipantID() + "_" + ExperimentController.instance.getRoomID() + "_" + surveyTitle.text + ".xml");
+        ResetSurvey();
+        ExperimentController.instance.nextSurvey();
+
     }
 }

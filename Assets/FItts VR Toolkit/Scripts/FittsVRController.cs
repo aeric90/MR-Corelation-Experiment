@@ -223,11 +223,8 @@ public class FittsVRController : MonoBehaviour
 
         if (!testing)
         {
-            detailOutput = new StreamWriter(Application.persistentDataPath + "/FittsVR-Detail-" + DateTime.Now.ToString("ddMMyy-MMss-") + participantID + ".csv");
-            detailOutput.WriteLine("PID,TID,#,A,W,ID,T,sX,sY,sZ,tX,tY,tZ,dX,dY,dZ");
-
-            summaryOutput = new StreamWriter(Application.persistentDataPath + "/FittsVR-Summary-" + DateTime.Now.ToString("ddMMyy-MMss-") + participantID + ".csv");
-            summaryOutput.WriteLine("Participant ID,Trial ID,Trial Text,A,W,ID,MT,MDx,SDx,We,IDe,TP");
+            OpenDetailOutput();
+            OpenSummaryOutput();
         }
     }
 
@@ -272,6 +269,7 @@ public class FittsVRController : MonoBehaviour
 
     public void TargetSelected(Vector3 selectionVector)
     {
+        Debug.Log("Fitts Click Registered");
         if (fittsRunning)
         {
             if (selectionTrial == false || (selectionTrial == true && touch == true))
@@ -388,12 +386,21 @@ public class FittsVRController : MonoBehaviour
         selections.Add(newSelection);
     }
 
+    private void OpenDetailOutput()
+    {
+        detailOutput = new StreamWriter(Application.persistentDataPath + "/FittsVR-Detail-" + DateTime.Now.ToString("ddMMyy-MMss-") + participantID + ".csv");
+        detailOutput.WriteLine("PID,TID,T,S,#,A,W,ID,T,sX,sY,sZ,tX,tY,tZ,dX,dY,dZ");
+    }
+
     private void DetailOutput(Vector3 selectionVector)
     {
         string outputLine = "";
 
         outputLine += participantID + ",";
+        outputLine += conditionID + ",";
         outputLine += conditionText + ",";
+        string selectionText = selectionTrial ? "ON" : "OFF";
+        outputLine += selectionText + ",";
         outputLine += targetCount + ",";
         outputLine += currentAmplitude + ",";
         outputLine += currentTargetWidth + ",";
@@ -420,6 +427,12 @@ public class FittsVRController : MonoBehaviour
         detailOutput.WriteLine(outputLine);
     }
 
+    private void OpenSummaryOutput()
+    {
+        summaryOutput = new StreamWriter(Application.persistentDataPath + "/FittsVR-Summary-" + DateTime.Now.ToString("ddMMyy-MMss-") + participantID + ".csv");
+        summaryOutput.WriteLine("PID,TID,T,S,A,W,ID,MT,MDx,SDx,We,IDe,TP");
+    }
+
     private void SummaryOutput()
     {
         foreach (FittsCondition condition in experimentTrials.conditions)
@@ -429,6 +442,8 @@ public class FittsVRController : MonoBehaviour
             outputLine += participantID + ",";
             outputLine += conditionID + ",";
             outputLine += conditionText + ",";
+            string selectionText = selectionTrial ? "ON" : "OFF";
+            outputLine += selectionText + ",";
             outputLine += condition.amplitude + ",";
             outputLine += condition.width + ",";
             float ID = (float)Math.Log((condition.amplitude / condition.width) + 1, 2);
@@ -536,6 +551,7 @@ public class FittsVRController : MonoBehaviour
 
     public void setSelectionCondition(bool status)
     {
+        Debug.Log("Setting Fitts Selection To - " + status);
         selectionTrial = status;
     }
 

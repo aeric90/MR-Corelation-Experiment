@@ -65,6 +65,24 @@ public class UIController : MonoBehaviour
         practiceUI2.SetActive(true);
     }
 
+    public void wsSurveyUIOn()
+    {
+        disableAll();
+        WSSurveyUI.SetActive(true);
+    }
+
+    public void susSurveyUIOn()
+    {
+        disableAll();
+        SUSSurveyUI.SetActive(true);
+    }
+
+    public void ipqSurveyUIOn()
+    {
+        disableAll();
+        IPQSurveyUI.SetActive(true);
+    }
+
     public void disableAll()
     {
         handUI.SetActive(false);

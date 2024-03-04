@@ -18,12 +18,14 @@ public class StartUIController : MonoBehaviour
 
     public void updateRoundText(int roomNumber, int currentRound)
     {
-        roundText.text = "Room " + roomNumber + " - Round " + currentRound;
+        roundText.text = "Room " + (roomNumber + 1) + " - Round " + currentRound;
     }
 
-    public void updateConditionText(string conditionText)
+    public void updateConditionText(int conditionValue)
     {
-        this.conditionText.text = conditionText;
+        conditionText.text = "Selected - ";
+        if (conditionValue == 0) conditionText.text += " OFF";
+        if (conditionValue == 1) conditionText.text += " ON";
     }
 
     public void nextClick()

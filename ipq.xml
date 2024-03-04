@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<survey_container xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<SurveyName>WS</SurveyName>
+	<SurveyQuestions>
+		<SurveyQuestion>
+			<QuestionNumber>1</QuestionNumber>
+			<QuestionText>How much were you able to control events?</QuestionText>
+			<QuestionLeft>NOT AT ALL</QuestionLeft>
+			<QuestionMiddle>SOMEWHAT</QuestionMiddle>
+			<QuestionRight>COMPLETELY</QuestionRight>
+		</SurveyQuestion>
+		<SurveyQuestion>
+			<QuestionNumber>2</QuestionNumber>
+			<QuestionText>How responsive was the environment to actions that you initiated (or performed)?</QuestionText>
+			<QuestionLeft>NOT RESPONSIVE</QuestionLeft>
+			<QuestionMiddle>MODERATELY RESPONSIVE</QuestionMiddle>
+			<QuestionRight>COMPLETELY RESPONSIVE</QuestionRight>
+		</SurveyQuestion>
+		<SurveyQuestion>
+			<QuestionNumber>3</QuestionNumber>
+			<QuestionText>How natural did your interactions with the environment seem?</QuestionText>
+			<QuestionLeft>EXTREMELY ARTIFICIAL</QuestionLeft>
+			<QuestionMiddle>BORDERLINE</QuestionMiddle>
+			<QuestionRight>COMPLETELY NATURAL</QuestionRight>
+		</SurveyQuestion>
+	</SurveyQuestions>
+</survey_container>
