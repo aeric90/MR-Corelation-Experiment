@@ -34,7 +34,6 @@ public class SurveyQuestionController : MonoBehaviour
 
     public void ResetQuestion()
     {
-        Debug.Log("Reseting" + questionName);
         answerSlider.value = 0;
     }
 }

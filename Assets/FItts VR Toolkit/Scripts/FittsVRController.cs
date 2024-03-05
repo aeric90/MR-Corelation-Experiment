@@ -107,6 +107,8 @@ public class FittsVRController : MonoBehaviour
 
     private bool touch = false;
 
+    public GameObject fittsSelectionPoint;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -140,7 +142,6 @@ public class FittsVRController : MonoBehaviour
 
     public void StartFitts()
     {
-        Debug.Log("Fitts VR - Start");
         fittsRunning = true;
         numberOfTrialsComplete = -1;
         if(currentStatus == FITTS_STATUS.POST_TRAIL) currentStatus = FITTS_STATUS.TRIAL;
@@ -149,7 +150,6 @@ public class FittsVRController : MonoBehaviour
 
     public void ResetTargets()
     {
-        Debug.Log("Fitts VR - Reseting Targets");
         DeleteTargets();
 
         for(float i = 0.0f; i < currentTotalTargets; i++)
@@ -172,8 +172,10 @@ public class FittsVRController : MonoBehaviour
 
     private void DeleteTargets()
     {
-        Debug.Log("Fitts VR - Deleting Targets");
-        foreach (GameObject target in targets) DestroyImmediate(target);
+        foreach (GameObject target in targets)
+        {
+            if(target.tag == "fittsTarget") DestroyImmediate(target);
+        }
         targets.Clear();
     }
 
@@ -204,33 +206,31 @@ public class FittsVRController : MonoBehaviour
 
     public void StartCalibration()
     {
-        Debug.Log("Fitts VR - Start Calibration");
         currentStatus = FITTS_STATUS.CALIBRATION;
     }
 
     public void StartPractice()
     {
-        Debug.Log("Fitts VR - Start Practice");
+        practiceComplete = false;
+        currentTrial = 0;
         currentTotalTargets = practiceTrials.numOfTargets;
         currentStatus = FITTS_STATUS.PRACTICE;
     }
 
     public void StartTrials()
     {
-        Debug.Log("Fitts VR - Start Trial");
         currentTotalTargets = experimentTrials.numOfTargets;
         currentStatus = FITTS_STATUS.TRIAL;
 
         if (!testing)
         {
             OpenDetailOutput();
-            OpenSummaryOutput();
+            //OpenSummaryOutput();
         }
     }
 
     public void EndTrial()
     {
-        Debug.Log("Fitts VR - End Trial");
         trialComplete = true;
         DeleteTargets();
         currentStatus = FITTS_STATUS.POST_TRAIL;
@@ -238,13 +238,12 @@ public class FittsVRController : MonoBehaviour
 
     public void EndFitts()
     {
-        Debug.Log("Fitts VR - End Fitts");
         fittsRunning = false;
         currentStatus = FITTS_STATUS.END;
         if (!testing)
         {
             detailOutput.Close();
-            summaryOutput.Close();
+            //summaryOutput.Close();
         }
     }
 
@@ -269,20 +268,21 @@ public class FittsVRController : MonoBehaviour
 
     public void TargetSelected(Vector3 selectionVector)
     {
-        Debug.Log("Fitts Click Registered");
         if (fittsRunning)
         {
             if (selectionTrial == false || (selectionTrial == true && touch == true))
             {
                 GetComponent<AudioSource>().Play();
 
+                fittsSelectionPoint.transform.position = selectionVector;
+
                 switch (currentStatus)
                 {
                     case FITTS_STATUS.TRIAL:
                         if (targetCount > 0)
                         {
-                            AddSelection(selectionVector);
-                            if (!testing) DetailOutput(selectionVector);
+                            AddSelection(fittsSelectionPoint.transform.localPosition);
+                            if (!testing) DetailOutput(fittsSelectionPoint.transform.localPosition);
                         }
                         break;
                 }
@@ -316,7 +316,6 @@ public class FittsVRController : MonoBehaviour
                 ResetTargets();
                 break;
             case FITTS_STATUS.PRACTICE:
-                Debug.Log("Fitts VR - Next Practice");
                 currentTrial++;
                 if (currentTrial >= practiceTrials.conditions.Length)
                 {
@@ -335,12 +334,11 @@ public class FittsVRController : MonoBehaviour
                 numberOfTrialsComplete++;
                 if (numberOfTrialsComplete >= conditionSquareNew.Count * conditionRepetitions)
                 {
-                    if(!testing) SummaryOutput();
+                    //if(!testing) SummaryOutput();
                     EndTrial(); 
                 }
                 else
                 {
-                    Debug.Log("Fitts VR - Next Trial - " + numberOfTrialsComplete);
                     currentTrial = conditionSquareNew[numberOfTrialsComplete % conditionSquareNew.Count];
                     newCondition = experimentTrials.conditions[currentTrial];
                     trialComplete = false;
@@ -379,9 +377,9 @@ public class FittsVRController : MonoBehaviour
         newSelection.selectionX = selectionVector.x;
         newSelection.selectionY = selectionVector.y;
         newSelection.selectionZ = selectionVector.z;
-        newSelection.targetX = targets[currentTargetIndex].transform.position.x;
-        newSelection.targetY = targets[currentTargetIndex].transform.position.y;
-        newSelection.targetZ = targets[currentTargetIndex].transform.position.z;
+        newSelection.targetX = targets[currentTargetIndex].transform.localPosition.x;
+        newSelection.targetY = targets[currentTargetIndex].transform.localPosition.y;
+        newSelection.targetZ = targets[currentTargetIndex].transform.localPosition.z;
         
         selections.Add(newSelection);
     }
@@ -408,21 +406,18 @@ public class FittsVRController : MonoBehaviour
         float selectionTime = Time.time - lastTargetTime;
         //tList.Add(selectionTime);
         outputLine += selectionTime + ",";
-        outputLine += selectionVector.x + ",";
-        outputLine += selectionVector.y + ",";
-        outputLine += selectionVector.z + ",";
-        outputLine += targets[currentTargetIndex].transform.position.x + ",";
-        outputLine += targets[currentTargetIndex].transform.position.y + ",";
-        outputLine += targets[currentTargetIndex].transform.position.z + ",";
+        outputLine += Math.Round(selectionVector.x, 4) + ",";
+        outputLine += Math.Round(selectionVector.y, 4) + ",";
+        outputLine += Math.Round(selectionVector.z, 4) + ",";
+        outputLine += Math.Round(targets[currentTargetIndex].transform.localPosition.x, 4) + ",";
+        outputLine += Math.Round(targets[currentTargetIndex].transform.localPosition.y, 4) + ",";
+        outputLine += Math.Round(targets[currentTargetIndex].transform.localPosition.z, 4) + ",";
 
-        float xDelta = Math.Abs(targets[currentTargetIndex].transform.position.x - selectionVector.x);
         //dXlist.Add(xDelta);
-        float yDelta = Math.Abs(targets[currentTargetIndex].transform.position.y - selectionVector.y);
-        float zDelta = Math.Abs(targets[currentTargetIndex].transform.position.z - selectionVector.z);
 
-        outputLine += xDelta + ",";
-        outputLine += yDelta + ",";
-        outputLine += zDelta + ",";
+        outputLine += Math.Round(Math.Abs(targets[currentTargetIndex].transform.localPosition.x - selectionVector.x), 4) + ",";
+        outputLine += Math.Round(Math.Abs(targets[currentTargetIndex].transform.localPosition.y - selectionVector.y), 4) + ",";
+        outputLine += Math.Round(Math.Abs(targets[currentTargetIndex].transform.localPosition.z - selectionVector.z), 4) + ",";
 
         detailOutput.WriteLine(outputLine);
     }
@@ -551,7 +546,6 @@ public class FittsVRController : MonoBehaviour
 
     public void setSelectionCondition(bool status)
     {
-        Debug.Log("Setting Fitts Selection To - " + status);
         selectionTrial = status;
     }
 

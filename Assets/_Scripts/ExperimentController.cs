@@ -51,6 +51,7 @@ public class ExperimentController : MonoBehaviour
 
     public GameObject fittsSpawn;
     public GameObject fittsController;
+    public GameObject fittsSpawnPlane;
 
     public GameObject uiAnchor;
     public GameObject uiController;
@@ -87,7 +88,7 @@ public class ExperimentController : MonoBehaviour
     {
         if(currentState == EXPERIMENT_STATE.ROUND)
         {
-            if (FittsVRController.instance.GetTrialComplete()) changeState(EXPERIMENT_STATE.SURVEY);
+            if (FittsVRController.instance.GetTrialComplete()) nextRound();
         }
     }
 
@@ -106,7 +107,7 @@ public class ExperimentController : MonoBehaviour
         switch (currentState)
         {
             case EXPERIMENT_STATE.CALIBRATION:
-                CalibrationCheck();
+                CalibrationCheckNew();
                 break;
         }
     }
@@ -167,6 +168,7 @@ public class ExperimentController : MonoBehaviour
                 roomSquare = LatinSquareGenerator(4, participantID);
                 conditionSquare = LatinSquareGenerator(2, participantID);
                 surveySquare = LatinSquareGenerator(3, participantID);
+                photonView.RPC("ExpStartUpdate", RpcTarget.AllBuffered);
                 changeState(EXPERIMENT_STATE.ROUND_START);
                 break;
             case EXPERIMENT_STATE.ROUND_START:
@@ -181,6 +183,7 @@ public class ExperimentController : MonoBehaviour
             case EXPERIMENT_STATE.ROUND:
                 UIController.instance.disableAll();
                 FittsVRController.instance.StartFitts();
+                photonView.RPC("RoundUpdate", RpcTarget.AllBuffered, currentRound);
                 currentState = EXPERIMENT_STATE.ROUND;
                 break;
             case EXPERIMENT_STATE.ROUND_END:
@@ -196,6 +199,7 @@ public class ExperimentController : MonoBehaviour
             case EXPERIMENT_STATE.EXP_END:
                 RoomController.instance.confirgureRoom(15);
                 UIController.instance.endUIOn();
+                photonView.RPC("ExpEndUpdate", RpcTarget.AllBuffered);
                 currentState = EXPERIMENT_STATE.EXP_END;
                 break;
         }
@@ -216,15 +220,25 @@ public class ExperimentController : MonoBehaviour
         currentRound++;
         currentCondition++;
 
-        if (currentCondition > 1)
+        if (currentCondition > 1 || !testing)
         {
-            currentCondition = 0;
-            roomNumber++;
+            changeState(EXPERIMENT_STATE.SURVEY);
+        } 
+        else
+        {
+            changeState(EXPERIMENT_STATE.ROUND_START);
         }
+    }
+
+    public void nextRoom()
+    {
+        roomNumber++;
+        currentCondition = 0;
 
         if (roomNumber > 3)
             changeState(EXPERIMENT_STATE.EXP_END);
         else
+            photonView.RPC("RoomUpdate", RpcTarget.AllBuffered, getRoomID());
             changeState(EXPERIMENT_STATE.ROUND_START);
     }
 
@@ -260,6 +274,7 @@ public class ExperimentController : MonoBehaviour
                 maxRounds = 3;
             }
 
+            photonView.RPC("PIDUpdate", RpcTarget.AllBuffered, participantID);
             changeState(EXPERIMENT_STATE.CALIBRATION);
         }
     }
@@ -301,6 +316,30 @@ public class ExperimentController : MonoBehaviour
         SetFittsSpawnPoint();
     }
 
+    private void CalibrationCheckNew()
+    {
+        Vector3 pokePosition = fittsSpawn.transform.position;
+
+        if (hand == "left")
+        {
+            pokePosition = leftPokeInteractor.transform.position;
+        }
+        else if (hand == "right")
+        {
+            pokePosition = rightPokeInteractor.transform.position;
+        }
+
+        if(fittsSpawnPlane == null) fittsSpawnPlane = GameObject.FindGameObjectWithTag("fittsSpawnPlane");
+        //fittsSpawn.transform.localPosition = new Vector3(0.0f, pokePosition.y, pokePosition.z);
+
+        Vector3 fittsSpawnPlaneNormal = fittsSpawnPlane.transform.up;
+        Debug.Log(fittsSpawnPlaneNormal);
+        Vector3 projection = Vector3.ProjectOnPlane(pokePosition, fittsSpawnPlaneNormal);
+        fittsSpawn.transform.position = projection;
+        fittsSpawn.transform.localPosition = new Vector3(0.0f, fittsSpawn.transform.localPosition.y, fittsSpawn.transform.localPosition.z);
+        SetFittsSpawnPoint();
+    }
+
     private void CheckClick()
     {
         if (hand == "left")
@@ -316,11 +355,6 @@ public class ExperimentController : MonoBehaviour
     public void UICalibrationNext()
     {
         changeState(EXPERIMENT_STATE.PRACTICE1);
-    }
-
-    private void SendRoomRPC()
-    {
-
     }
 
     public void ResetCurrentState()
@@ -348,7 +382,7 @@ public class ExperimentController : MonoBehaviour
         currentSurvey++;
         if (currentSurvey > 2)
         {
-            nextRound();
+            nextRoom();
         } else
         {
             toggleSurvey();
@@ -402,5 +436,36 @@ public class ExperimentController : MonoBehaviour
         }
 
         return result;
+    }
+
+    [PunRPC]
+    public void ExpStartUpdate()
+    {
+        Debug.Log("Network Exerpiment Started");
+    }
+
+    [PunRPC]
+    public void PIDUpdate(int PID)
+    {
+        Debug.Log("Exerpiment PID Update - " + PID);
+    }
+
+
+    [PunRPC]
+    public void RoomUpdate(int roomID)
+    {
+        Debug.Log("Network Room Update - " + roomID);
+    }
+
+    [PunRPC]
+    public void RoundUpdate(int roundNo)
+    {
+        Debug.Log("Network Round Update - " + roundNo);
+    }
+
+    [PunRPC]
+    public void ExpEndUpdate()
+    {
+        Debug.Log("Exerpiment Ended");
     }
 }

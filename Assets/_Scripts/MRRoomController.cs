@@ -27,26 +27,24 @@ public class MRRoomController : MonoBehaviour
 
         GameObject floor = null;
 
-        if (!ExperimentController.instance.testing)
+        Debug.Log("Waiting for floor");
+        while (floor == null)
         {
-            Debug.Log("Waiting for floor");
-            while (floor == null)
+            OVRSemanticClassification[] anchorLists = FindObjectsOfType(typeof(OVRSemanticClassification)) as OVRSemanticClassification[];
+
+            foreach (OVRSemanticClassification anchor in anchorLists)
             {
-                OVRSemanticClassification[] anchorLists = FindObjectsOfType(typeof(OVRSemanticClassification)) as OVRSemanticClassification[];
-
-                foreach (OVRSemanticClassification anchor in anchorLists)
+                if (anchor.Contains("FLOOR"))
                 {
-                    if (anchor.Contains("FLOOR"))
-                    {
-                        floor = anchor.gameObject;
-                        break;
-                    }
+                    floor = anchor.gameObject;
+                    break;
                 }
-
-                yield return new WaitForSeconds(0.1f);
             }
-            Debug.Log("Floor found");
+
+            yield return new WaitForSeconds(0.1f);
         }
+        Debug.Log("Floor found");
+
 
         foreach(GameObject room in GameObject.FindGameObjectsWithTag("room"))
         {

@@ -12,6 +12,9 @@ TagManager:
   - fittsSpawn
   - room
   - uiAnchor
+  - fittsSpawnPlane
+  - fittsSelection
+  - fittsTarget
   layers:
   - Default
   - TransparentFX

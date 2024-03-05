@@ -1,27 +1,90 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <survey_container xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<SurveyName>WS</SurveyName>
+	<SurveyName>IPQ</SurveyName>
 	<SurveyQuestions>
 		<SurveyQuestion>
 			<QuestionNumber>1</QuestionNumber>
-			<QuestionText>How much were you able to control events?</QuestionText>
+			<QuestionText>In the computer generated world I had a sense of "being there"</QuestionText>
 			<QuestionLeft>NOT AT ALL</QuestionLeft>
-			<QuestionMiddle>SOMEWHAT</QuestionMiddle>
-			<QuestionRight>COMPLETELY</QuestionRight>
+			<QuestionRight>VERY MUCH</QuestionRight>
+			<QuestionNumber>2</QuestionNumber>
 		</SurveyQuestion>
 		<SurveyQuestion>
-			<QuestionNumber>2</QuestionNumber>
-			<QuestionText>How responsive was the environment to actions that you initiated (or performed)?</QuestionText>
-			<QuestionLeft>NOT RESPONSIVE</QuestionLeft>
-			<QuestionMiddle>MODERATELY RESPONSIVE</QuestionMiddle>
-			<QuestionRight>COMPLETELY RESPONSIVE</QuestionRight>
+			<QuestionText>Somehow I felt that the virtual world surrounded me.</QuestionText>
+			<QuestionLeft>FULLY DISAGREE</QuestionLeft>
+			<QuestionRight>FULLY AGREE</QuestionRight>
 		</SurveyQuestion>
 		<SurveyQuestion>
 			<QuestionNumber>3</QuestionNumber>
-			<QuestionText>How natural did your interactions with the environment seem?</QuestionText>
-			<QuestionLeft>EXTREMELY ARTIFICIAL</QuestionLeft>
-			<QuestionMiddle>BORDERLINE</QuestionMiddle>
-			<QuestionRight>COMPLETELY NATURAL</QuestionRight>
+			<QuestionText>I felt like I was just perceiving pictures.</QuestionText>
+			<QuestionLeft>FULLY DISAGREE</QuestionLeft>
+			<QuestionRight>FULLY AGREE</QuestionRight>
+		</SurveyQuestion>
+		<SurveyQuestion>
+			<QuestionNumber>4</QuestionNumber>
+			<QuestionText>I did not feel present in the virtual space.</QuestionText>
+			<QuestionLeft>DID NOT FEEL</QuestionLeft>
+			<QuestionRight>FELT PRESENT</QuestionRight>
+		</SurveyQuestion>
+		<SurveyQuestion>
+			<QuestionNumber>5</QuestionNumber>
+			<QuestionText>I had a sense of acting in the virtual space, rather than operating something from outside.</QuestionText>
+			<QuestionLeft>FULLY DISAGREE</QuestionLeft>
+			<QuestionRight>FULLY AGREE</QuestionRight>
+		</SurveyQuestion>
+		<SurveyQuestion>
+			<QuestionNumber>6</QuestionNumber>
+			<QuestionText>I felt present in the virtual space.</QuestionText>
+			<QuestionLeft>FULLY DISAGREE</QuestionLeft>
+			<QuestionRight>FULLY AGREE</QuestionRight>
+		</SurveyQuestion>
+		<SurveyQuestion>
+			<QuestionNumber>7</QuestionNumber>
+			<QuestionText>How aware were you of the real world surrounding while navigating in the virtual world? (i.e. sounds, room temperature, other people, etc.)?</QuestionText>
+			<QuestionLeft>EXTREMELY AWARE</QuestionLeft>
+			<QuestionRight>NOT AWARE AT ALL</QuestionRight>
+		</SurveyQuestion>
+		<SurveyQuestion>
+			<QuestionNumber>8</QuestionNumber>
+			<QuestionText>I was not aware of my real environment.</QuestionText>
+			<QuestionLeft>FULLY DISAGREE</QuestionLeft>
+			<QuestionRight>FULLY AGREE</QuestionRight>
+		</SurveyQuestion>
+		<SurveyQuestion>
+			<QuestionNumber>9</QuestionNumber>
+			<QuestionText>I still paid attention to the real environment.</QuestionText>
+			<QuestionLeft>FULLY DISAGREE</QuestionLeft>
+			<QuestionRight>FULLY AGREE</QuestionRight>
+		</SurveyQuestion>
+		<SurveyQuestion>
+			<QuestionNumber>10</QuestionNumber>
+			<QuestionText>I was completely captivated by the virtual world.</QuestionText>
+			<QuestionLeft>FULLY DISAGREE</QuestionLeft>
+			<QuestionRight>FULLY AGREE</QuestionRight>
+		</SurveyQuestion>
+		<SurveyQuestion>
+			<QuestionNumber>11</QuestionNumber>
+			<QuestionText>How real did the virtual world seem to you?</QuestionText>
+			<QuestionLeft>COMPLETELY REAL</QuestionLeft>
+			<QuestionRight>NOT REAL AT ALL</QuestionRight>
+		</SurveyQuestion>
+		<SurveyQuestion>
+			<QuestionNumber>12</QuestionNumber>
+			<QuestionText>How much did your experience in the virtual environment seem consistent with your real world experience ?</QuestionText>
+			<QuestionLeft>NOT CONSISTENT-MODERATELY CONSISTENT</QuestionLeft>
+			<QuestionRight>VERY CONSISTENT</QuestionRight>
+		</SurveyQuestion>
+		<SurveyQuestion>
+			<QuestionNumber>13</QuestionNumber>
+			<QuestionText>How real did the virtual world seem to you?</QuestionText>
+			<QuestionLeft>ABOUT AS REAL AS AN IMAGINED WORLD</QuestionLeft>
+			<QuestionRight>INDISTINGUISHABLE FROM THE REAL WORLD</QuestionRight>
+		</SurveyQuestion>
+		<SurveyQuestion>
+			<QuestionNumber>14</QuestionNumber>
+			<QuestionText>The virtual world seemed more realistic than the real world.</QuestionText>
+			<QuestionLeft>FULLY DISAGREE</QuestionLeft>
+			<QuestionRight>FULLY AGREE</QuestionRight>
 		</SurveyQuestion>
 	</SurveyQuestions>
 </survey_container>

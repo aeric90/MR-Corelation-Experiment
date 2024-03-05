@@ -18,13 +18,11 @@ public class FittsVRTargetController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.tag);
         if(other.tag == "poke") FittsVRController.instance.TargetTriggerIn(this.gameObject);
     }
 
     private void OnTriggerExit(Collider other)
     {
-        Debug.Log(other.tag);
         if (other.tag == "poke") FittsVRController.instance.TargetTriggerOut(this.gameObject);
     }
 }

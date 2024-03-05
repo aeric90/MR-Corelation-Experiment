@@ -15,7 +15,7 @@ public class PracticeUIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (FittsVRController.instance.GetPracticeComplete()) nextButton.SetActive(true);    
+        if (FittsVRController.instance.GetPracticeComplete() || ExperimentController.instance.testing) nextButton.SetActive(true);    
     }
 
     public void nextClick()
