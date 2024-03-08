@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<survey_container xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<SurveyName>SUS</SurveyName>
+	<SurveyQuestions>
+		<SurveyQuestion>
+			<QuestionNumber>1</QuestionNumber>
+			<QuestionText>Please rate your sense of being in the office space, on the following scale from 1 to 7, where 7 representsyour normal experience of being in a place.I had a sense of ‘being there’ in the office space:</QuestionText>
+			<QuestionLeft>NOT AT ALL</QuestionLeft>
+			<QuestionMiddle></QuestionMiddle>
+			<QuestionRight>VERY MUCH</QuestionRight>
+		</SurveyQuestion>
+		<SurveyQuestion>
+			<QuestionNumber>2</QuestionNumber>
+			<QuestionText>To what extent were there times during the experience when the office space was the reality for you? There were times during the experience when the office space was the reality for me...</QuestionText>
+			<QuestionLeft>AT NO TIME</QuestionLeft>
+			<QuestionMiddle></QuestionMiddle>
+			<QuestionRight>ALMOST ALL THE TIME</QuestionRight>
+		</SurveyQuestion>
+		<SurveyQuestion>
+			<QuestionNumber>3</QuestionNumber>
+			<QuestionText>When you think back about your experience, do you think of the office space more as images that you saw, or more as somewhere that you visited? The office space seems to me to be more like...</QuestionText>
+			<QuestionLeft>IMAGES I SAW</QuestionLeft>
+			<QuestionMiddle></QuestionMiddle>
+			<QuestionRight>SOMEWHERE THAT I VISITED</QuestionRight>
+		</SurveyQuestion>
+		<SurveyQuestion>
+			<QuestionNumber>4</QuestionNumber>
+			<QuestionText>During the time of the experience, which was strongest on the whole, your sense of being in the office space, or of being elsewhere? I had a stronger sense of...</QuestionText>
+			<QuestionLeft>BEING ELSEWHERE</QuestionLeft>
+			<QuestionMiddle></QuestionMiddle>
+			<QuestionRight>BEING IN THE OFFICE SPACE</QuestionRight>
+		</SurveyQuestion>
+		<SurveyQuestion>
+			<QuestionNumber>5</QuestionNumber>
+			<QuestionText>Consider your memory of being in the office space. How similar in terms of the structure of the memory is this to the structure of the memory of other places you have been today? By ‘structure of the memory,’ consider things like the extent to which you have a visual memory of the office space, whether that memory is in color, the extent to which the memory seems vivid or realistic, its size, location in your imagination, the extent to which it is panoramic in your imagination, and other such structural elements. I think of the office space as a place in a way similar to other places that I’ve been today...</QuestionText>
+			<QuestionLeft>NOT AT ALL</QuestionLeft>
+			<QuestionMiddle></QuestionMiddle>
+			<QuestionRight>VERY MUCH SO</QuestionRight>
+		</SurveyQuestion>
+		<SurveyQuestion>
+			<QuestionNumber>6</QuestionNumber>
+			<QuestionText>During the time of the experience, did you often think to yourself that you were actually in the office space? During the experience I often thought that I was really standing in the office space...</QuestionText>
+			<QuestionLeft>NOT VERY OFTEN</QuestionLeft>
+			<QuestionMiddle></QuestionMiddle>
+			<QuestionRight>VERY MUCH SO</QuestionRight>
+		</SurveyQuestion>
+	</SurveyQuestions>
+</survey_container>
