@@ -202,6 +202,7 @@ public class FittsVRController : MonoBehaviour
         }
 
         targets[currentTargetIndex].gameObject.GetComponent<Renderer>().material = targetActiveMaterial;
+        if (FittsVRControllerTracker.instance != null) FittsVRControllerTracker.instance.SetMovementTarget(targets[currentTargetIndex].gameObject.transform.localPosition);
     }
 
     public void StartCalibration()

@@ -154,7 +154,7 @@ public class ExperimentController : MonoBehaviour
                 break;
             case EXPERIMENT_STATE.PRACTICE2:
                 UIController.instance.practice2UIOn();
-                FittsVRController.instance.SetTargetMeshLow();
+                FittsVRController.instance.SetTargetMeshHigh();
                 FittsVRController.instance.setSelectionCondition(false);
                 FittsVRController.instance.StartPractice();
                 FittsVRController.instance.StartFitts();
@@ -168,7 +168,8 @@ public class ExperimentController : MonoBehaviour
                 roomSquare = LatinSquareGenerator(4, participantID);
                 conditionSquare = LatinSquareGenerator(2, participantID);
                 surveySquare = LatinSquareGenerator(3, participantID);
-                photonView.RPC("ExpStartUpdate", RpcTarget.AllBuffered);
+                photonView.RPC("ExpStartUpdate", RpcTarget.All);
+                if (FittsVRControllerTracker.instance != null) FittsVRControllerTracker.instance.SetTrackerOn(true);
                 changeState(EXPERIMENT_STATE.ROUND_START);
                 break;
             case EXPERIMENT_STATE.ROUND_START:
@@ -178,16 +179,20 @@ public class ExperimentController : MonoBehaviour
                 UIController.instance.roundUIOn();
                 StartUIController.instance.updateRoundText(roomNumber, currentRound);
                 StartUIController.instance.updateConditionText(conditionSquare[currentCondition]);
+                photonView.RPC("RoundUpdate", RpcTarget.All, currentRound);
+                photonView.RPC("RoomUpdate", RpcTarget.All, getRoomID());
+                if (FittsVRControllerTracker.instance != null) FittsVRControllerTracker.instance.SetExpTrial(currentRound);
                 currentState = EXPERIMENT_STATE.ROUND_START;
                 break;
             case EXPERIMENT_STATE.ROUND:
                 UIController.instance.disableAll();
                 FittsVRController.instance.StartFitts();
-                photonView.RPC("RoundUpdate", RpcTarget.AllBuffered, currentRound);
+                if (FittsVRControllerTracker.instance != null) FittsVRControllerTracker.instance.SetTrackerPaused(false);
                 currentState = EXPERIMENT_STATE.ROUND;
                 break;
             case EXPERIMENT_STATE.ROUND_END:
                 FittsVRController.instance.EndTrial();
+                if (FittsVRControllerTracker.instance != null) FittsVRControllerTracker.instance.SetTrackerPaused(true);
                 nextRound();
                 currentState = EXPERIMENT_STATE.ROUND_END;
                 break;
@@ -199,7 +204,8 @@ public class ExperimentController : MonoBehaviour
             case EXPERIMENT_STATE.EXP_END:
                 RoomController.instance.confirgureRoom(15);
                 UIController.instance.endUIOn();
-                photonView.RPC("ExpEndUpdate", RpcTarget.AllBuffered);
+                if (FittsVRControllerTracker.instance != null) FittsVRControllerTracker.instance.SetTrackerOn(false);
+                photonView.RPC("ExpEndUpdate", RpcTarget.All);
                 currentState = EXPERIMENT_STATE.EXP_END;
                 break;
         }
@@ -238,7 +244,6 @@ public class ExperimentController : MonoBehaviour
         if (roomNumber > 3)
             changeState(EXPERIMENT_STATE.EXP_END);
         else
-            photonView.RPC("RoomUpdate", RpcTarget.AllBuffered, getRoomID());
             changeState(EXPERIMENT_STATE.ROUND_START);
     }
 
@@ -252,11 +257,13 @@ public class ExperimentController : MonoBehaviour
             {
                 rightController.SetActive(false);
                 rightControllerInteractor.SetActive(false);
+                if (FittsVRControllerTracker.instance != null) FittsVRControllerTracker.instance.SetTrackedObject(leftPokeInteractor);
             }
             else if (hand == "right")
             {
                 leftController.SetActive(false);
                 leftControllerInteractor.SetActive(false);
+                if (FittsVRControllerTracker.instance != null) FittsVRControllerTracker.instance.SetTrackedObject(rightPokeInteractor);
             }
 
             changeState(EXPERIMENT_STATE.PARTICIPANT_ID);
@@ -274,7 +281,8 @@ public class ExperimentController : MonoBehaviour
                 maxRounds = 3;
             }
 
-            photonView.RPC("PIDUpdate", RpcTarget.AllBuffered, participantID);
+            photonView.RPC("PIDUpdate", RpcTarget.All, participantID);
+            if (FittsVRControllerTracker.instance != null) FittsVRControllerTracker.instance.SetPID(participantID);
             changeState(EXPERIMENT_STATE.CALIBRATION);
         }
     }
