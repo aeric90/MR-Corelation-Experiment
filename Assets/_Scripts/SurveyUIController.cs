@@ -104,6 +104,7 @@ public class SurveyUIController : MonoBehaviour
     private void OnEnable()
     {
         questionContent.verticalNormalizedPosition = 1.0f;
+        if(ExperimentController.instance.GetCurrentState() == EXPERIMENT_STATE.SURVEY) ExperimentOutputController.instance.SurveyStart(surveyTitle.text);
     }
 
     public void SetupSurvey()
@@ -187,6 +188,7 @@ public class SurveyUIController : MonoBehaviour
             surveyError.text = "";
             ExportSurvey(Application.persistentDataPath + "/" + ExperimentController.instance.getParticipantID() + "_" + ExperimentController.instance.getRoomID() + "_" + surveyTitle.text + ".csv");
             ResetSurvey();
+            ExperimentOutputController.instance.SurveyEnd(surveyTitle.text);
             ExperimentController.instance.nextSurvey();
         }
     }

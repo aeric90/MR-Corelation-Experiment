@@ -95,6 +95,11 @@ public class ExperimentController : MonoBehaviour
         }
     }
 
+    public EXPERIMENT_STATE GetCurrentState()
+    {
+        return currentState;
+    }
+
     public void TopButtonPress()
     {
         switch (currentState)
@@ -177,6 +182,8 @@ public class ExperimentController : MonoBehaviour
                 break;
             case EXPERIMENT_STATE.ROUND_START:
                 RoomController.instance.confirgureRoom(roomList[roomSquare[roomNumber]]);
+                ExperimentOutputController.instance.RoundStart(currentRound);
+                ExperimentOutputController.instance.RoomStart(roomList[roomSquare[roomNumber]]);
                 FittsVRController.instance.setSelectionCondition(conditionSquare[currentCondition] == 1);
                 FittsVRController.instance.SetConditionID(roomList[roomSquare[roomNumber]]);
                 UIController.instance.roundUIOn();
@@ -194,6 +201,7 @@ public class ExperimentController : MonoBehaviour
                 currentState = EXPERIMENT_STATE.ROUND;
                 break;
             case EXPERIMENT_STATE.ROUND_END:
+                ExperimentOutputController.instance.RoundEnd();
                 FittsVRController.instance.EndTrial();
                 if (FittsVRControllerTracker.instance != null) FittsVRControllerTracker.instance.SetTrackerPaused(true);
                 nextRound();
@@ -207,6 +215,8 @@ public class ExperimentController : MonoBehaviour
             case EXPERIMENT_STATE.EXP_END:
                 RoomController.instance.confirgureRoom(15);
                 UIController.instance.endUIOn();
+                ExperimentOutputController.instance.CloseExperimentOutput();
+                FittsVRController.instance.EndFitts();
                 if (FittsVRControllerTracker.instance != null) FittsVRControllerTracker.instance.SetTrackerOn(false);
                 photonView.RPC("ExpEndUpdate", RpcTarget.All);
                 currentState = EXPERIMENT_STATE.EXP_END;
@@ -238,9 +248,15 @@ public class ExperimentController : MonoBehaviour
         currentRound++;
         currentCondition++;
 
-        if (currentCondition > 1 || !testing)
+        if (currentCondition > 1)
         {
-            changeState(EXPERIMENT_STATE.SURVEY);
+            if (!testing)
+            {
+                changeState(EXPERIMENT_STATE.SURVEY);
+            } else
+            {
+                nextRoom();
+            }
         } 
         else
         {
@@ -250,6 +266,7 @@ public class ExperimentController : MonoBehaviour
 
     public void nextRoom()
     {
+        ExperimentOutputController.instance.RoomEnd();
         roomNumber++;
         currentCondition = 0;
 
@@ -294,6 +311,7 @@ public class ExperimentController : MonoBehaviour
             }
 
             photonView.RPC("PIDUpdate", RpcTarget.All, participantID);
+            ExperimentOutputController.instance.SetPID(participantID);
             if (FittsVRControllerTracker.instance != null) FittsVRControllerTracker.instance.SetPID(participantID);
             changeState(EXPERIMENT_STATE.CALIBRATION);
         }

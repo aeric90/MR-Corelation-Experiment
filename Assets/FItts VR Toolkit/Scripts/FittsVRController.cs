@@ -222,12 +222,8 @@ public class FittsVRController : MonoBehaviour
     {
         currentTotalTargets = experimentTrials.numOfTargets;
         currentStatus = FITTS_STATUS.TRIAL;
-
-        if (!testing)
-        {
-            OpenDetailOutput();
-            //OpenSummaryOutput();
-        }
+        OpenDetailOutput();
+        //OpenSummaryOutput();
     }
 
     public void EndTrial()
@@ -241,11 +237,8 @@ public class FittsVRController : MonoBehaviour
     {
         fittsRunning = false;
         currentStatus = FITTS_STATUS.END;
-        if (!testing)
-        {
-            detailOutput.Close();
-            //summaryOutput.Close();
-        }
+        detailOutput.Close();
+        //summaryOutput.Close();
     }
 
     public void TargetTriggerIn(GameObject target)
@@ -279,12 +272,12 @@ public class FittsVRController : MonoBehaviour
                     if (targetCount > 0)
                     {
                         AddSelection(fittsSelectionPoint.transform.localPosition);
-                        if (!testing) DetailOutput(fittsSelectionPoint.transform.localPosition, touch);
+                        DetailOutput(fittsSelectionPoint.transform.localPosition, touch);
                     }
                     break;
             }
 
-            if ( !selectionTrial || (selectionTrial && touch))
+            if ( !selectionTrial || (selectionTrial && touch) || testing)
             {
                 GetComponent<AudioSource>().Play();
                 lastTargetTime = Time.time;
@@ -334,7 +327,7 @@ public class FittsVRController : MonoBehaviour
                 numberOfTrialsComplete++;
                 if (numberOfTrialsComplete >= conditionSquareNew.Count * conditionRepetitions)
                 {
-                    //if(!testing) SummaryOutput();
+                    //SummaryOutput();
                     EndTrial(); 
                 }
                 else
@@ -387,7 +380,7 @@ public class FittsVRController : MonoBehaviour
     private void OpenDetailOutput()
     {
         detailOutput = new StreamWriter(Application.persistentDataPath + "/FittsVR-Detail-" + DateTime.Now.ToString("ddMMyy-MMss-") + participantID + ".csv");
-        detailOutput.WriteLine("PID,TID,T,S,#,A,W,ID,T,sX,sY,sZ,tX,tY,tZ,dX,dY,dZ,HIT");
+        detailOutput.WriteLine("PID,TID,T,S,#,A,W,ID,T,sX,sY,sZ,tX,tY,tZ,HIT,dX,dY,dZ");
     }
 
     private void DetailOutput(Vector3 selectionVector, bool hit)
@@ -418,7 +411,7 @@ public class FittsVRController : MonoBehaviour
 
         outputLine += Math.Round(Math.Abs(targets[currentTargetIndex].transform.localPosition.x - selectionVector.x), 4) + ",";
         outputLine += Math.Round(Math.Abs(targets[currentTargetIndex].transform.localPosition.y - selectionVector.y), 4) + ",";
-        outputLine += Math.Round(Math.Abs(targets[currentTargetIndex].transform.localPosition.z - selectionVector.z), 4) + ",";
+        outputLine += Math.Round(Math.Abs(targets[currentTargetIndex].transform.localPosition.z - selectionVector.z), 4);
 
         detailOutput.WriteLine(outputLine);
     }
