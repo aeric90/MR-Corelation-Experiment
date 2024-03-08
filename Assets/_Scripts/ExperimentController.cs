@@ -49,6 +49,9 @@ public class ExperimentController : MonoBehaviour
     public GameObject leftPokeInteractor;
     public GameObject rightPokeInteractor;
 
+    public GameObject leftRayInteractor;
+    public GameObject rightRayInteractor;
+
     public GameObject fittsSpawn;
     public GameObject fittsController;
     public GameObject fittsSpawnPlane;
@@ -223,6 +226,15 @@ public class ExperimentController : MonoBehaviour
 
     public void nextRound()
     {
+        if (hand == "left")
+        {
+            leftRayInteractor.SetActive(true);
+        }
+        else if (hand == "right")
+        {
+            rightRayInteractor.SetActive(true);
+        }
+
         currentRound++;
         currentCondition++;
 
@@ -295,6 +307,14 @@ public class ExperimentController : MonoBehaviour
 
     public void UIStartRound()
     {
+        if (hand == "left")
+        {
+            leftRayInteractor.SetActive(false); 
+        }
+        else if (hand == "right")
+        {
+            rightRayInteractor.SetActive(false);
+        }
         changeState(EXPERIMENT_STATE.ROUND); 
     }
 

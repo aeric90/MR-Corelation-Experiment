@@ -269,25 +269,24 @@ public class FittsVRController : MonoBehaviour
 
     public void TargetSelected(Vector3 selectionVector)
     {
-        if (fittsRunning)
+        if(fittsRunning)
         {
-            if (selectionTrial == false || (selectionTrial == true && touch == true))
+            fittsSelectionPoint.transform.position = selectionVector;
+
+            switch (currentStatus)
+            {
+                case FITTS_STATUS.TRIAL:
+                    if (targetCount > 0)
+                    {
+                        AddSelection(fittsSelectionPoint.transform.localPosition);
+                        if (!testing) DetailOutput(fittsSelectionPoint.transform.localPosition, touch);
+                    }
+                    break;
+            }
+
+            if ( !selectionTrial || (selectionTrial && touch))
             {
                 GetComponent<AudioSource>().Play();
-
-                fittsSelectionPoint.transform.position = selectionVector;
-
-                switch (currentStatus)
-                {
-                    case FITTS_STATUS.TRIAL:
-                        if (targetCount > 0)
-                        {
-                            AddSelection(fittsSelectionPoint.transform.localPosition);
-                            if (!testing) DetailOutput(fittsSelectionPoint.transform.localPosition);
-                        }
-                        break;
-                }
-
                 lastTargetTime = Time.time;
                 touch = false;
                 targetCount++;
@@ -388,10 +387,10 @@ public class FittsVRController : MonoBehaviour
     private void OpenDetailOutput()
     {
         detailOutput = new StreamWriter(Application.persistentDataPath + "/FittsVR-Detail-" + DateTime.Now.ToString("ddMMyy-MMss-") + participantID + ".csv");
-        detailOutput.WriteLine("PID,TID,T,S,#,A,W,ID,T,sX,sY,sZ,tX,tY,tZ,dX,dY,dZ");
+        detailOutput.WriteLine("PID,TID,T,S,#,A,W,ID,T,sX,sY,sZ,tX,tY,tZ,dX,dY,dZ,HIT");
     }
 
-    private void DetailOutput(Vector3 selectionVector)
+    private void DetailOutput(Vector3 selectionVector, bool hit)
     {
         string outputLine = "";
 
@@ -413,6 +412,7 @@ public class FittsVRController : MonoBehaviour
         outputLine += Math.Round(targets[currentTargetIndex].transform.localPosition.x, 4) + ",";
         outputLine += Math.Round(targets[currentTargetIndex].transform.localPosition.y, 4) + ",";
         outputLine += Math.Round(targets[currentTargetIndex].transform.localPosition.z, 4) + ",";
+        outputLine += hit ? "TRUE," : "FALSE,";
 
         //dXlist.Add(xDelta);
 
