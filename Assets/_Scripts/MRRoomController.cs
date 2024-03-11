@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class MRRoomController : MonoBehaviour
 {
     public static MRRoomController instance;
-
+    
     public GameObject roomPrefab;
-
 
     private void Awake()
     {

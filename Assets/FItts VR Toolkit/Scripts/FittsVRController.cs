@@ -577,4 +577,6 @@ public class FittsVRController : MonoBehaviour
     {
         ChangeTargetMaterials(targetMatsSimple[0], targetMatsSimple[1], targetMatsSimple[2], targetMatsSimple[3]);
     }
+
+    
 }

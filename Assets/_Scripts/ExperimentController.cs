@@ -67,6 +67,8 @@ public class ExperimentController : MonoBehaviour
 
     private PhotonView photonView;
 
+    private Vector3 calibrationPoint = Vector3.zero;
+
     private void Awake()
     {
         if(instance == null) instance = this;
@@ -382,7 +384,8 @@ public class ExperimentController : MonoBehaviour
         Debug.Log(fittsSpawnPlaneNormal);
         Vector3 projection = Vector3.ProjectOnPlane(pokePosition, fittsSpawnPlaneNormal);
         fittsSpawn.transform.position = projection;
-        fittsSpawn.transform.localPosition = new Vector3(0.0f, fittsSpawn.transform.localPosition.y, fittsSpawn.transform.localPosition.z);
+        calibrationPoint = new Vector3(0.0f, fittsSpawn.transform.localPosition.y, fittsSpawn.transform.localPosition.z);
+        //fittsSpawn.transform.localPosition = new Vector3(0.0f, fittsSpawn.transform.localPosition.y, fittsSpawn.transform.localPosition.z);
         SetFittsSpawnPoint();
     }
 
@@ -411,6 +414,7 @@ public class ExperimentController : MonoBehaviour
     public void SetFittsSpawnPoint()
     {
         fittsSpawn = GameObject.FindGameObjectWithTag("fittsSpawn");
+        fittsSpawn.transform.localPosition = calibrationPoint;
         fittsController.transform.position = fittsSpawn.transform.position;
         fittsController.transform.rotation = fittsSpawn.transform.rotation;
         
